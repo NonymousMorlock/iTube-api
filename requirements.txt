@@ -1,3 +1,4 @@
+boto3==1.40.43
 fastapi==0.118.0
 passlib==1.7.4
 psycopg[binary]==3.2.10
