@@ -10,6 +10,7 @@ from app.core.exceptions import AppError
 
 logger = logging.getLogger(__name__)
 
+
 class ErrorHandlerMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         try:
