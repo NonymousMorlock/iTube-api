@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.logging_config import setup_logging
-from app.middleware.error_handler import ErrorHandlerMiddleware
+from app.middleware import ErrorHandlerMiddleware
 
 
 def create_app():
@@ -18,5 +18,6 @@ def create_app():
     )
     api.add_middleware(ErrorHandlerMiddleware)
     return api
+
 
 app = create_app()
