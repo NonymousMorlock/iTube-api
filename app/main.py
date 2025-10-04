@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.auth import router as auth_router
 from app.core.logging_config import setup_logging
 from app.core.middleware import ErrorHandlerMiddleware
 
@@ -17,6 +18,9 @@ def create_app():
         allow_origins=['*'],
     )
     api.add_middleware(ErrorHandlerMiddleware)
+
+    api.include_router(router=auth_router, prefix="/api/v1")
+
     return api
 
 
