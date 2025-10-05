@@ -1,3 +1,4 @@
-from app.core.middleware.error_handler import ErrorHandlerMiddleware
+from app.core.middleware.access_log import AccessLogMiddleware
 
-__all__ = ['ErrorHandlerMiddleware']
+__all__ = ['AccessLogMiddleware']
+

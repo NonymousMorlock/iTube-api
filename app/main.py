@@ -2,8 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.auth import router as auth_router
+from app.core.error_handlers import register_exception_handlers
 from app.core.logging_config import setup_logging
-from app.core.middleware import ErrorHandlerMiddleware
+from app.core.middleware import AccessLogMiddleware
 
 
 def create_app():
@@ -17,7 +18,9 @@ def create_app():
         allow_methods=['*'],
         allow_origins=['*'],
     )
-    api.add_middleware(ErrorHandlerMiddleware)
+    api.add_middleware(AccessLogMiddleware)
+
+    register_exception_handlers(api)
 
     api.include_router(router=auth_router, prefix="/api/v1")
 

@@ -1,7 +1,7 @@
 class AppError(Exception):
     """Base app error with optional status code + client message."""
 
-    def __init__(self, message: str, status_code: int = 500, detail: str = None):
+    def __init__(self, message: str, status_code: int = 500, detail: str | None = None):
         super().__init__(message)
         self.status_code = status_code
         self.detail = detail or message
@@ -12,7 +12,7 @@ class NotFoundError(AppError):
         super().__init__(message, status_code=404)
 
 
-class ValidationError(AppError):
+class DomainValidationError(AppError):
     def __init__(self, message="Invalid request data"):
         super().__init__(message, status_code=422)
 
