@@ -6,6 +6,12 @@ class Settings(BaseSettings):
 
     DATABASE_URL: str
 
+    # Cognito
+    COGNITO_CLIENT_ID: str
+    COGNITO_CLIENT_SECRET: str
+
+    # AWS
+    REGION_NAME: str
 
 
 settings = Settings()
