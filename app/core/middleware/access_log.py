@@ -1,9 +1,10 @@
-import time
 import logging
-from fastapi import Request
+import time
+
 from starlette.types import ASGIApp, Receive, Scope, Send
 
 logger = logging.getLogger(__name__)
+
 
 class AccessLogMiddleware:
     def __init__(self, app: ASGIApp):
