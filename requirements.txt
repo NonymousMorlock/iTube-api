@@ -1,6 +1,6 @@
-botocore==1.40.46
-boto3==1.40.46
-fastapi==0.118.0
+botocore==1.40.48
+boto3==1.40.48
+fastapi==0.118.2
 passlib==1.7.4
 psycopg[binary]==3.2.10
 pydantic==2.12.0
