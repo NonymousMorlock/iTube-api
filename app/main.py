@@ -6,6 +6,7 @@ from app.core.database import init_db
 from app.core.error_handlers import register_exception_handlers
 from app.core.logging_config import setup_logging
 from app.core.middleware import AccessLogMiddleware
+from app.video import router as video_router
 
 
 def create_app():
@@ -26,6 +27,7 @@ def create_app():
     init_db()
 
     api.include_router(router=auth_router, prefix="/api/v1")
+    api.include_router(router=video_router, prefix='/api/v1/upload')
 
     return api
 
