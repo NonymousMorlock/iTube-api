@@ -18,7 +18,8 @@ def create_app():
         allow_credentials=True,
         allow_headers=['*'],
         allow_methods=['*'],
-        allow_origins=['*'],
+        allow_origins=['http://localhost:5480', 'http://127.0.0.1:5480'],
+        expose_headers=['Set-Cookie']
     )
     api.add_middleware(AccessLogMiddleware)
 

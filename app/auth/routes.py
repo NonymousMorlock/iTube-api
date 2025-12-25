@@ -11,6 +11,13 @@ if TYPE_CHECKING:
     from app.auth import AuthService
 
 router = APIRouter(prefix="/auth", tags=['auth'])
+cookie_params = {
+    "httponly": True,
+    # Required for cross-port localhost (5480 -> 8000)
+    "samesite": "none",
+    # Required for SameSite=None
+    "secure": True,
+}
 
 
 @router.post('/signup', response_model=schemas.RegistrationSuccess)
@@ -22,8 +29,8 @@ async def register_user(user: schemas.UserCreate, service: "AuthService" = Depen
 async def login(credentials: schemas.UserLogin, response: Response, service: "AuthService" = Depends(get_auth_service)):
     tokens = await service.login(credentials)
 
-    response.set_cookie(key='access_token', value=tokens.access_token, httponly=True, secure=True)
-    response.set_cookie(key='refresh_token', value=tokens.refresh_token, httponly=True, secure=True)
+    response.set_cookie(key='access_token', value=tokens.access_token, **cookie_params)
+    response.set_cookie(key='refresh_token', value=tokens.refresh_token, **cookie_params)
 
 
 @router.post('/verify-email', response_model=None)
@@ -42,15 +49,25 @@ async def refresh_user_token(
         payload=schemas.RefreshToken(refresh_token=refresh_token, user_cognito_sub=user_cognito_sub)
     )
 
-    response.set_cookie(key="access_token", value=tokens.access_token, httponly=True, secure=True)
-    response.set_cookie(key='refresh_token', value=tokens.refresh_token, httponly=True, secure=True)
+    response.set_cookie(key="access_token", value=tokens.access_token, **cookie_params)
+    response.set_cookie(key='refresh_token', value=tokens.refresh_token, **cookie_params)
 
 
 @router.get('/me', response_model=schemas.UserRead)
 async def get_current_user(
+        response: Response,
         current_user: AuthUser = Depends(get_current_user),
         service: "AuthService" = Depends(get_auth_service),
 ):
     database_user = await service.get_user_by_cognito_sub(current_user.sub)
     database_user.email_verified = current_user.email_verified
+
+    response.set_cookie(key='user_cognito_sub', value=current_user.sub, **cookie_params)
     return database_user
+
+
+@router.get('/logout', response_model=None)
+async def logout(response: Response):
+    response.delete_cookie(key='access_token', **cookie_params)
+    response.delete_cookie(key='refresh_token', **cookie_params)
+    response.delete_cookie(key='user_cognito_sub', **cookie_params)
