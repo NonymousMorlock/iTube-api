@@ -25,7 +25,7 @@ def register_exception_handlers(app: FastAPI) -> None:
         logger.error("AppError %s %s :: %s", request.method, request.url, exc.detail)
         return JSONResponse(
             status_code=exc.status_code,
-            content=ErrorResponse(error=exc.detail).model_dump(),
+            content=ErrorResponse(error=exc.error_code or str(exc.status_code), details=exc.detail).model_dump(),
         )
 
     @app.exception_handler(HTTPException)
