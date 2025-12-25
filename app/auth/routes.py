@@ -66,7 +66,7 @@ async def get_current_user(
     return database_user
 
 
-@router.get('/logout', response_model=None)
+@router.post('/logout', response_model=None)
 async def logout(response: Response):
     response.delete_cookie(key='access_token', **cookie_params)
     response.delete_cookie(key='refresh_token', **cookie_params)
