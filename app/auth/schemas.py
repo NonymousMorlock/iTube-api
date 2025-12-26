@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from pydantic import BaseModel, EmailStr, ConfigDict
 
 
@@ -15,7 +17,7 @@ class UserCreate(UserBase):
 
 #  set orm mode true
 class UserRead(UserBase):
-    id: str
+    id: UUID
     name: str
     email: str
     email_verified: bool = False
