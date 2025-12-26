@@ -119,8 +119,8 @@ class AuthRepository:
         access_token = auth_result.get('AccessToken')
         refresh_token = auth_result.get('RefreshToken')
 
-        if not access_token or not refresh_token:
-            logger.error("AuthenticationResult missing tokens")
+        if not access_token:
+            logger.error(f"AuthenticationResult missing access token")
             raise InternalServerError("Failed to authenticate user")
 
         return {'access_token': access_token, 'refresh_token': refresh_token}
