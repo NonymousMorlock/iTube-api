@@ -13,6 +13,8 @@ def create_app():
     setup_logging()
     api = FastAPI()
 
+    api.add_middleware(AccessLogMiddleware)
+
     api.add_middleware(
         CORSMiddleware,
         allow_credentials=True,
@@ -21,7 +23,6 @@ def create_app():
         allow_origins=['http://localhost:5480', 'http://127.0.0.1:5480'],
         expose_headers=['Set-Cookie']
     )
-    api.add_middleware(AccessLogMiddleware)
 
     register_exception_handlers(api)
 
