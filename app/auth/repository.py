@@ -127,8 +127,8 @@ class AuthRepository:
 
 
 def _generate_cognito_error(exception: ClientError, operation: str = 'operation') -> CognitoError:
-    error = exception.response["Error"]
-    code = error.get("Code")
+    error = exception.response.get("Error", {})
+    code = error.get("Code", 'Unknown')
     message = error.get("Message")
 
     logger.error(
