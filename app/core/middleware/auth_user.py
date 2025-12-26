@@ -2,6 +2,7 @@ import logging
 from typing import Optional
 
 from botocore.client import BaseClient
+from botocore.exceptions import ClientError
 from fastapi import Cookie, Depends, Header, HTTPException, status
 
 from app.core.cognito import get_cognito_client
@@ -12,7 +13,21 @@ logger = logging.getLogger(__name__)
 
 
 def _get_cognito_user(access_token: str, cognito_client: BaseClient) -> AuthUser:
-    raw_user = cognito_client.get_user(AccessToken=access_token)
+    try:
+        raw_user = cognito_client.get_user(AccessToken=access_token)
+    except ClientError as exception:
+        error = exception.response.get("Error", {})
+        error_code = error.get("Code", 'Unknown')
+        message = error.get("Message")
+        logger.error(
+            f"Attempt to get cognito user failed",
+            extra={"cognito_code": error_code, "cognito_message": message},
+            exc_info=exception,
+        )
+        if error_code in ["NotAuthorizedException", "ExpiredTokenException"]:
+            raise UnauthorizedError("Session expired or invalid. Please login again.")
+        raise exception
+
     user = {attribute['Name']: attribute['Value'] for attribute in raw_user['UserAttributes']}
     return AuthUser(
         name=user['name'],
