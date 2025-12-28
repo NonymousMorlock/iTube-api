@@ -3,6 +3,7 @@ from typing import Any
 
 from botocore.client import BaseClient
 from botocore.exceptions import ClientError
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.auth.models import User
@@ -44,11 +45,14 @@ class AuthRepository:
                 logger.error("Cognito sign_up did not return UserSub")
                 raise InternalServerError("Failed to register user")
 
-            user = User(name=name, email=email, cognito_sub=cognito_sub)
-
-            self.db.add(user)
-            self.db.commit()
-            self.db.refresh(user)
+            try:
+                user = User(name=name, email=email, cognito_sub=cognito_sub)
+                self.db.add(user)
+                self.db.commit()
+                self.db.refresh(user)
+            except SQLAlchemyError as e:
+                self.db.rollback()
+                raise _generate_database_error(e, operation='register_user')
         except ClientError as e:
             raise _generate_cognito_error(e, operation='sign_up')
 
@@ -137,3 +141,14 @@ def _generate_cognito_error(exception: ClientError, operation: str = 'operation'
         exc_info=exception,
     )
     return CognitoError(error_code=code, message=message)
+
+
+def _generate_database_error(exception: SQLAlchemyError, operation: str = 'operation') -> InternalServerError:
+    """Convert SQLAlchemy error to AppError."""
+    error_message = str(exception)
+    logger.error(
+        f"Database {operation} failed",
+        extra={"db_error": error_message},
+        exc_info=exception,
+    )
+    return InternalServerError(f"Database operation failed", error_code='DATABASE_ERROR')

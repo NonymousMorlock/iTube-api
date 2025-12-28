@@ -30,8 +30,8 @@ class ConflictError(AppError):
 
 
 class InternalServerError(AppError):
-    def __init__(self, message="Something went wrong"):
-        super().__init__(message, status_code=500)
+    def __init__(self, message="Something went wrong", error_code: str | None = None):
+        super().__init__(message, status_code=500, error_code=error_code)
 
 
 class CognitoError(AppError):
