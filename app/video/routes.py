@@ -55,7 +55,7 @@ async def get_video_by_id(
     return await service.get_video_by_id(video_id)
 
 
-@router.get('/by-key/{s3_key:path}', response_model=schemas.VideoIdResponse)
+@router.get('/by-key/{s3_key:path}', response_model=schemas.VideoIdResponse, include_in_schema=False)
 async def get_video_id_by_s3_key(
         s3_key: str,
         _: str = Depends(verify_iam_auth),
@@ -65,7 +65,7 @@ async def get_video_id_by_s3_key(
     return await service.get_video_id_by_s3_key(s3_key)
 
 
-@router.patch('/{video_id}/status', response_model=None)
+@router.patch('/{video_id}/status', response_model=None, include_in_schema=False)
 async def update_video_processing_status(
         video_id: str,
         status: str,
