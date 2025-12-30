@@ -29,7 +29,7 @@ class VideoRepository:
                     # 'ACL': 'private',
                     'ContentType': 'video/mp4',
                 },
-                # ExpiresIn=3600  # URL valid for 1 hour
+                # ExpiresIn=3600 # URL valid for 1 hour
             )
             return presigned_url
         except ClientError as e:
@@ -42,10 +42,10 @@ class VideoRepository:
                 Params={
                     'Bucket': settings.S3_VIDEO_THUMBNAILS_BUCKET,
                     'Key': thumbnail_id,
-                    # 'ACL': 'private',
+                    'ACL': 'public-read',
                     'ContentType': 'image/jpg',
                 },
-                # ExpiresIn=3600  # URL valid for 1 hour
+                # ExpiresIn=3600 # URL valid for 1 hour
             )
             return presigned_url
         except ClientError as e:
