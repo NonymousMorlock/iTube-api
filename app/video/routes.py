@@ -23,10 +23,11 @@ async def get_presigned_video_url(
 
 @router.post('/thumbnail/upload-url', response_model=schemas.MediaUploadResponse)
 async def get_presigned_thumbnail_url(
-        current_user: AuthUser = Depends(get_current_user),
+        associated_video_id: str,
+        _: AuthUser = Depends(get_current_user),
         service: "VideoService" = Depends(get_video_service),
 ):
-    return await service.generate_presigned_thumbnail_url(current_user)
+    return await service.generate_presigned_thumbnail_url(thumbnail_id=associated_video_id)
 
 
 @router.post('/metadata', response_model=schemas.Video)
