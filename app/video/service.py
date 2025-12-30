@@ -16,13 +16,13 @@ class VideoService:
         self.redis = redis_client
 
     async def generate_presigned_video_url(self, user: AuthUser) -> schemas.MediaUploadResponse:
-        video_id = f'videos/{user.sub}/{uuid.uuid4()}'
+        video_id = f'videos/{user.sub}/{uuid.uuid4()}.mp4'
         url = await self.video_repo.generate_presigned_video_url(video_id)
 
         return schemas.MediaUploadResponse(url=url, media_id=video_id)
 
     async def generate_presigned_thumbnail_url(self, thumbnail_id: str) -> schemas.MediaUploadResponse:
-        thumbnail_id = thumbnail_id.replace('videos/', 'thumbnails/')
+        thumbnail_id = thumbnail_id.replace('videos/', 'thumbnails/').replace('.mp4', '.jpg')
         url = await self.video_repo.generate_presigned_thumbnail_url(thumbnail_id)
 
         return schemas.MediaUploadResponse(url=url, media_id=thumbnail_id)
