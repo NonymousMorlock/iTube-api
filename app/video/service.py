@@ -22,6 +22,7 @@ class VideoService:
         return schemas.MediaUploadResponse(url=url, media_id=video_id)
 
     async def generate_presigned_thumbnail_url(self, thumbnail_id: str) -> schemas.MediaUploadResponse:
+        thumbnail_id = thumbnail_id.replace('videos/', 'thumbnails/')
         url = await self.video_repo.generate_presigned_thumbnail_url(thumbnail_id)
 
         return schemas.MediaUploadResponse(url=url, media_id=thumbnail_id)
