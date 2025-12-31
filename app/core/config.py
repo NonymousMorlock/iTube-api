@@ -15,8 +15,8 @@ class Settings(BaseSettings):
 
     # AWS
     REGION_NAME: str
-    # AWS_ACCESS_KEY_ID: str
-    # AWS_SECRET_ACCESS_KEY: str
+    AWS_ACCESS_KEY_ID: str
+    AWS_SECRET_ACCESS_KEY: str
 
     # S3
     S3_RAW_VIDEOS_BUCKET: str
