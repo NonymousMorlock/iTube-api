@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from pydantic import ConfigDict, BaseModel
 
 
@@ -18,7 +20,7 @@ class VideoBase(BaseModel):
 
 
 class Video(VideoBase):
-    id: str
+    id: UUID | str
     user_id: str
     processing_status: str  # Should be one of "IN_PROGRESS", "COMPLETED", "FAILED"
 
