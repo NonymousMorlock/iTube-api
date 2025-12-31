@@ -21,8 +21,7 @@ class AccessLogMiddleware:
                 method = scope["method"]
                 path = scope["path"]
                 dur_ms = (time.perf_counter() - start) * 1000
-                if status_code >= 400:
-                    logger.info("%s %s -> %d in %.1fms", method, path, status_code, dur_ms)
+                logger.info("%s %s -> %d in %.1fms", method, path, status_code, dur_ms)
             await send(message)
 
         return await self.app(scope, receive, _send)
