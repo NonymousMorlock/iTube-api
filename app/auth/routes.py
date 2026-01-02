@@ -50,7 +50,8 @@ async def refresh_user_token(
     )
 
     response.set_cookie(key="access_token", value=tokens.access_token, **cookie_params)
-    response.set_cookie(key='refresh_token', value=tokens.refresh_token, **cookie_params)
+    if tokens.refresh_token:
+        response.set_cookie(key='refresh_token', value=tokens.refresh_token, **cookie_params)
 
 
 @router.get('/me', response_model=schemas.UserRead)
