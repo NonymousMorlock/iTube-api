@@ -39,7 +39,7 @@ async def upload_video_metadata(
     return await service.save_video_metadata(current_user, metadata)
 
 
-@router.get('/', response_model=list[schemas.Video])
+@router.get('', response_model=list[schemas.Video])
 async def get_all_videos(
         _: AuthUser = Depends(get_current_user),
         service: "VideoService" = Depends(get_video_service),
